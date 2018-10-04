@@ -1,10 +1,10 @@
-import Phaser from 'phaser';
-import makeAnimations from '../utils/animations';
-import Bono from '../sprites/Bono';
+import Phaser from "phaser";
+import makeAnimations from "../utils/animations";
+import Bono from "../sprites/Bono";
 
 export default class extends Phaser.Scene {
   constructor() {
-    super({ key: 'Game' });
+    super({ key: "Game" });
 
     this.bono = null;
   }
@@ -18,6 +18,17 @@ export default class extends Phaser.Scene {
 
     makeAnimations(this);
     obstacles.setCollisionByExclusion([-1]);
+
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.SKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+
+    this.physics.world.bounds.width = map.widthInPixels;
+    this.physics.world.bounds.height = map.heightInPixels;
+    this.bono.setCollideWorldBounds(true);
+
+    this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    this.cameras.main.startFollow(this.bono);
+    this.cameras.main.roundPixels = true;
   }
 
   update() {
@@ -28,7 +39,7 @@ export default class extends Phaser.Scene {
     return new Bono({
       scene: this,
       x: this.cameras.main.centerX,
-      y: this.cameras.main.centerY,
+      y: this.cameras.main.centerY
     });
   }
 }
