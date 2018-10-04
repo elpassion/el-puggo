@@ -28,6 +28,7 @@ export default class extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.cameras.main.startFollow(this.bono);
     this.cameras.main.roundPixels = true;
+    this.physics.add.collider(this.bono, obstacles);
   }
 
   update() {
