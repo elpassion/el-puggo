@@ -29,10 +29,39 @@ export default class extends Phaser.Scene {
     this.cameras.main.startFollow(this.bono);
     this.cameras.main.roundPixels = true;
     this.physics.add.collider(this.bono, obstacles);
+
+    this.spawns = this.physics.add.group({
+      classType: Phaser.GameObjects.Zone
+    });
+    for (var i = 0; i < 30; i++) {
+      var x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
+      var y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
+      // parameters are x, y, width, height
+      this.spawns.create(x, y, 20, 20);
+    }
+    this.physics.add.overlap(
+      this.bono,
+      this.spawns,
+      this.interactWithBitcoin,
+      false,
+      this
+    );
+    this.score = 0;
+    this.scoreText = this.add.text(16, 16, "score: 0", {
+      fontSize: "32px",
+      fill: "#000"
+    });
+    this.scoreText.setScrollFactor(0);
   }
 
   update() {
     this.bono.update();
+  }
+
+  interactWithBitcoin(player, zone) {
+    this.scoreText.text = "Score " + ++this.score;
+    zone.destroy();
+    this.cameras.main.shake(300);
   }
 
   createBono({ x = 0, y = 0 }) {
