@@ -14,7 +14,7 @@ export default class extends Phaser.Scene {
     var tiles = map.addTilesetImage("spritesheet", "tiles");
     var grass = map.createStaticLayer("Grass", tiles, 0, 0);
     var obstacles = map.createStaticLayer("Obstacles", tiles, 0, 0);
-    this.bono = this.addBono({});
+    this.bono = this.createBono({});
 
     makeAnimations(this);
     obstacles.setCollisionByExclusion([-1]);
@@ -24,7 +24,6 @@ export default class extends Phaser.Scene {
 
     this.physics.world.bounds.width = map.widthInPixels;
     this.physics.world.bounds.height = map.heightInPixels;
-    this.bono.setCollideWorldBounds(true);
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.cameras.main.startFollow(this.bono);
@@ -35,7 +34,7 @@ export default class extends Phaser.Scene {
     this.bono.update();
   }
 
-  addBono({ x = 0, y = 0 }) {
+  createBono({ x = 0, y = 0 }) {
     return new Bono({
       scene: this,
       x: this.cameras.main.centerX,
