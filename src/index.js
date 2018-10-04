@@ -6,11 +6,11 @@ const config = {
   parent: 'el-puggo',
   // width: 272,
   // height: 272,
-  width: 1000,
-  height: 1000,
+  width: 9*32,
+  height: 7*32,
+  zoom: 2,
   pixelArt: true,
-  zoom: 1.5,
-  antialias: false,
+  // antialias: false,
   physics: {
     default: 'arcade',
     arcade: {
