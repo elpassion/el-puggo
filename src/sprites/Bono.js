@@ -1,6 +1,7 @@
 import BonoKeyboard from "../utils/keyboard";
+import Ball from "../sprites/ball";
 
-class Player extends Phaser.GameObjects.Sprite {
+class Bono extends Phaser.GameObjects.Sprite {
   constructor(config) {
     super(config.scene, config.x, config.y, (config.key = "bono"));
 
@@ -19,11 +20,22 @@ class Player extends Phaser.GameObjects.Sprite {
 
   update() {
     this.controls.update();
+    this.ball && this.ball.update();
   }
 
   incrementBitcoins() {
     this.score++;
   }
+
+  getBall() {
+    console.log('Have a baaallll!!!');
+    this.ball = new Ball({
+      scene: this.scene,
+      x: this.x,
+      y: this.y,
+      parent: this
+    });
+  }
 }
 
-export default Player;
+export default Bono;

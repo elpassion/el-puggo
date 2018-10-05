@@ -22,30 +22,33 @@ class BonoKeyboard {
     if (cursors.left.isDown) {
       this.direction = "left";
       this.player.anims.play("move_left", true);
+      this.player.ball && this.player.ball.anims.play("ball_move_left", true);
       this.player.body.setVelocityX(-80);
     } else if (cursors.right.isDown) {
       this.direction = "right";
       this.player.anims.play("move_right", true);
+      this.player.ball && this.player.ball.anims.play("ball_move_right", true);
       this.player.body.setVelocityX(80);
     } else if (cursors.up.isDown) {
       this.direction = "up";
       this.player.anims.play("move_up", true);
+      this.player.ball && this.player.ball.anims.play("ball_move_up", true);
       this.player.body.setVelocityY(-80);
     } else if (cursors.down.isDown) {
       this.direction = "down";
       this.player.anims.play("move_down", true);
+      this.player.ball && this.player.ball.anims.play("ball_move_down", true);
       this.player.body.setVelocityY(80);
     } else if (SKey.isDown) {
-      this.direction === "up" && this.player.anims.play("sit_up", true);
-      this.direction === "down" && this.player.anims.play("sit_down", true);
-      this.direction === "right" && this.player.anims.play("sit_right", true);
-      this.direction === "left" && this.player.anims.play("sit_left", true);
+      this.direction === "up" && this.player.anims.play("sit_up", true) && this.player.ball && this.player.ball.anims.play("ball_sit_up", true);
+      this.direction === "down" && this.player.anims.play("sit_down", true) && this.player.ball && this.player.ball.anims.play("ball_sit_down", true);
+      this.direction === "right" && this.player.anims.play("sit_right", true) && this.player.ball && this.player.ball.anims.play("ball_sit_right", true);
+      this.direction === "left" && this.player.anims.play("sit_left", true) && this.player.ball && this.player.ball.anims.play("ball_sit_left", true);
     } else {
-      if (this.direction === "up") this.player.anims.play("stay_up", true);
-      if (this.direction === "down") this.player.anims.play("stay_down", true);
-      if (this.direction === "right")
-        this.player.anims.play("stay_right", true);
-      if (this.direction === "left") this.player.anims.play("stay_left", true);
+      if (this.direction === "up") this.player.anims.play("stay_up", true) && this.player.ball && this.player.ball.anims.play("ball_stay_up", true);
+      if (this.direction === "down") this.player.anims.play("stay_down", true) && this.player.ball && this.player.ball.anims.play("ball_stay_down", true);
+      if (this.direction === "right") this.player.anims.play("stay_right", true) && this.player.ball && this.player.ball.anims.play("ball_stay_right", true);
+      if (this.direction === "left") this.player.anims.play("stay_left", true) && this.player.ball && this.player.ball.anims.play("ball_stay_left", true);
     }
   }
 }

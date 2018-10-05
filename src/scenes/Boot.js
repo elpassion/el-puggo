@@ -13,6 +13,15 @@ export default class extends Phaser.Scene {
 
     // map in json format
     this.load.tilemapTiledJSON("map", "assets/map/map.json");
+
+    // ball
+    this.load.image("ball", "./assets/sprites/ball.png")
+
+    // ball sprites
+    this.load.spritesheet("ball_sprite", "./assets/sprites/ball_sprite.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
   }
 
   create() {

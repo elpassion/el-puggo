@@ -52,6 +52,15 @@ export default class extends Phaser.Scene {
       fill: "#000"
     });
     this.scoreText.setScrollFactor(0);
+    this.ball = this.physics.add.image(this.cameras.main.centerX + 50, this.cameras.main.centerY + 50, 'ball');
+
+    this.physics.add.overlap(
+      this.bono,
+      this.ball,
+      this.interactWithBall,
+      false,
+      this
+    )
   }
 
   update() {
@@ -61,6 +70,11 @@ export default class extends Phaser.Scene {
 
   interactWithBitcoin(player, zone) {
     zone.onInteract(player);
+    zone.destroy();
+  }
+
+  interactWithBall(player, zone) {
+    player.getBall();
     zone.destroy();
   }
 
