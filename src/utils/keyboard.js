@@ -57,6 +57,8 @@ class BonoKeyboard {
         this.player.anims.play("sit_left", true) &&
         this.player.ball &&
         this.player.ball.anims.play("ball_sit_left", true);
+    } else if (Phaser.Input.Keyboard.JustDown(DKey)) {
+      this.player.ball && this.player.removeBall();
     } else {
       if (this.direction === "up")
         this.player.anims.play("stay_up", true) &&
