@@ -12,12 +12,13 @@ class BonoKeyboard {
     // 39: true | right arrow
     // 40: true | down arrow
     this.SKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+    this.DKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 
     this.lastSend = Date.now();
   }
 
   update() {
-    const { cursors, SKey } = this;
+    const { cursors, SKey, DKey } = this;
     this.player.body.setVelocity(0);
     if (cursors.left.isDown) {
       this.direction = "left";
@@ -44,6 +45,8 @@ class BonoKeyboard {
       this.direction === "down" && this.player.anims.play("sit_down", true) && this.player.ball && this.player.ball.anims.play("ball_sit_down", true);
       this.direction === "right" && this.player.anims.play("sit_right", true) && this.player.ball && this.player.ball.anims.play("ball_sit_right", true);
       this.direction === "left" && this.player.anims.play("sit_left", true) && this.player.ball && this.player.ball.anims.play("ball_sit_left", true);
+    } else if (Phaser.Input.Keyboard.JustDown(DKey)) {
+      this.player.ball && this.player.removeBall();
     } else {
       if (this.direction === "up") this.player.anims.play("stay_up", true) && this.player.ball && this.player.ball.anims.play("ball_stay_up", true);
       if (this.direction === "down") this.player.anims.play("stay_down", true) && this.player.ball && this.player.ball.anims.play("ball_stay_down", true);

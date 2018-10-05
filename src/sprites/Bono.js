@@ -28,13 +28,17 @@ class Bono extends Phaser.GameObjects.Sprite {
   }
 
   getBall() {
-    console.log("Have a baaallll!!!");
     this.ball = new Ball({
       scene: this.scene,
       x: this.x,
       y: this.y,
       parent: this,
     });
+  }
+
+  removeBall() {
+    this.ball.destroy();
+    this.ball = null;
   }
 }
 
