@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import makeAnimations from "../utils/animations";
 import Bono from "../sprites/Bono";
 import Bitcoin from "../objects/Bitcoin";
+import Coin from '../sprites/Coin';
 
 export default class extends Phaser.Scene {
   constructor() {
@@ -30,11 +31,12 @@ export default class extends Phaser.Scene {
     var map = this.make.tilemap({ key: "map" });
     var tiles = map.addTilesetImage("spritesheet", "tiles");
     var grass = map.createStaticLayer("Grass", tiles, 0, 0);
-    var obstacles = map.createStaticLayer("Obstacles", tiles, 0, 0);
-    this.bono = this.createBono({});
 
-    makeAnimations(this);
+    var obstacles = map.createStaticLayer("Obstacles", tiles, 0, 0);
     obstacles.setCollisionByExclusion([-1]);
+
+    this.bono = this.createBono({});
+    makeAnimations(this);
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.SKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
@@ -50,33 +52,30 @@ export default class extends Phaser.Scene {
     this.cameras.main.roundPixels = true;
     this.physics.add.collider(this.bono, obstacles);
 
-    this.spawns = this.physics.add.group({
-      classType: Bitcoin
-    });
+    this.coins = [];
     for (var i = 0; i < 30; i++) {
       var x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
       var y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
-      // parameters are x, y, width, height
-      this.spawns.create(x, y, 20, 20);
+
+      const coin = new Coin({scene: this, x, y});
+      this.coins.push(coin);
+
+      this.physics.add.overlap(
+        this.bono,
+        coin,
+        this.interactWithCoin,
+        false,
+        this
+      );
     }
-    this.physics.add.overlap(
-      this.bono,
-      this.spawns,
-      this.interactWithBitcoin,
-      false,
-      this
-    );
+
     this.scoreText = this.add.text(16, 16, "score: 0", {
       fontSize: "32px",
       fill: "#000"
     });
     this.scoreText.setScrollFactor(0);
-    this.ball = this.physics.add.image(
-      this.cameras.main.centerX + 50,
-      this.cameras.main.centerY + 50,
-      "ball"
-    );
 
+    this.ball = this.physics.add.image(this.cameras.main.centerX + 50, this.cameras.main.centerY + 50, 'ball');
     this.physics.add.overlap(
       this.bono,
       this.ball,
@@ -124,6 +123,7 @@ export default class extends Phaser.Scene {
     }
 
     this.bono.update();
+    this.coins.forEach(coin => { coin.update();});
     this.scoreText.text = "Score " + this.bono.score;
   }
 
@@ -169,6 +169,12 @@ export default class extends Phaser.Scene {
 
   interactWithBall(player, zone) {
     player.getBall();
+    zone.destroy();
+  }
+
+  interactWithCoin(player, zone) {
+    player.incrementBitcoins();
+    this.coins = this.coins.filter(coin => (!(coin.x === zone.x && coin.y === zone.y)));
     zone.destroy();
   }
 

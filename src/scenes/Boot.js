@@ -22,6 +22,11 @@ export default class extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     });
+    // coin sprites
+    this.load.spritesheet("coin_sprite", "./assets/sprites/coin_sprite.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
   }
 
   create() {

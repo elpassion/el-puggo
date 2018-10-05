@@ -46,4 +46,17 @@ export default function makeAnimations(scene) {
       repeat
     });
   })
+
+  const coinanimation = [
+    {key: 'coin_rotate', start: 0, end: 5},
+  ];
+
+  coinanimation.forEach(({ key, start, end, frameRate = 10, repeat = -1 }) => {
+    scene.anims.create({
+      key,
+      frames: scene.anims.generateFrameNumbers('coin_sprite', { start, end }),
+      frameRate,
+      repeat
+    });
+  })
 }
