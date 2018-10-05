@@ -1,8 +1,8 @@
 import Phaser from "phaser";
 import makeAnimations from "../utils/animations";
 import Bono from "../sprites/Bono";
-import Bitcoin from "../objects/Bitcoin";
-import Coin from '../sprites/Coin';
+import Coin from "../sprites/Coin";
+import Person from "../sprites/Person";
 
 export default class extends Phaser.Scene {
   constructor() {
@@ -13,18 +13,17 @@ export default class extends Phaser.Scene {
     this.spacebar = null;
 
     this.conversation = {
-      RandomPerson: [
+      Klaudia: [
         "Hi little dogie",
         "woof",
         "where is Claudia?",
         "woof...",
         "go find her, Bono! I count on you <3",
-        "WOOF"
-      ]
+        "WOOF",
+      ],
     };
     this.conversationStarted = false;
     this.conversationIndex = 0;
-    this.activeTalker = "RandomPerson";
   }
 
   create() {
@@ -57,7 +56,7 @@ export default class extends Phaser.Scene {
       var x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
       var y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
 
-      const coin = new Coin({scene: this, x, y});
+      const coin = new Coin({ scene: this, x, y });
       this.coins.push(coin);
 
       this.physics.add.overlap(
@@ -71,11 +70,15 @@ export default class extends Phaser.Scene {
 
     this.scoreText = this.add.text(16, 16, "score: 0", {
       fontSize: "32px",
-      fill: "#000"
+      fill: "#000",
     });
     this.scoreText.setScrollFactor(0);
 
-    this.ball = this.physics.add.image(this.cameras.main.centerX + 50, this.cameras.main.centerY + 50, 'ball');
+    this.ball = this.physics.add.image(
+      this.cameras.main.centerX + 50,
+      this.cameras.main.centerY + 50,
+      "ball"
+    );
     this.physics.add.overlap(
       this.bono,
       this.ball,
@@ -83,6 +86,19 @@ export default class extends Phaser.Scene {
       false,
       this
     );
+
+    this.klaudia = new Person({ scene: this, x: 55, y: 32, key: "klaudia" });
+    this.klaudia.body.immovable = true;
+    this.physics.add.collider(
+      this.bono,
+      this.klaudia,
+      this.collideWithKlaudia,
+      false,
+      this
+    );
+    this.klaudia.name = "Klaudia";
+    this.persons = [];
+    this.persons.push(this.klaudia);
   }
 
   _setText(text) {
@@ -97,8 +113,8 @@ export default class extends Phaser.Scene {
       padding,
       style: {
         wordWrap: { width: this.game.canvas.width - 2 * padding },
-        fontSize: 9
-      }
+        fontSize: 9,
+      },
     });
   }
 
@@ -117,13 +133,26 @@ export default class extends Phaser.Scene {
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
-      if (!this.conversationStarted) {
-        this.startConversation(this.conversation[this.activeTalker]);
+      const activeTalker =
+        this.persons.filter(
+          p =>
+            Math.abs(p.x - this.bono.x) < 10 &&
+            Math.abs(p.y - this.bono.y) < p.height
+        )[0] || null;
+      if (
+        !this.conversationStarted &&
+        activeTalker &&
+        this.conversation[activeTalker.name]
+      ) {
+        console.log("asd");
+        this.startConversation(this.conversation[activeTalker.name]);
       }
     }
 
     this.bono.update();
-    this.coins.forEach(coin => { coin.update();});
+    this.coins.forEach(coin => {
+      coin.update();
+    });
     this.scoreText.text = "Score " + this.bono.score;
   }
 
@@ -135,7 +164,7 @@ export default class extends Phaser.Scene {
       this.game.canvas.height / 3
     );
     this.msgBoxContainer = this.add.graphics({
-      fillStyle: { color: 0x000000 }
+      fillStyle: { color: 0x000000 },
     });
     this.msgBoxContainer.fillRectShape(this.msgBox);
     this._setText(text);
@@ -174,15 +203,19 @@ export default class extends Phaser.Scene {
 
   interactWithCoin(player, zone) {
     player.incrementBitcoins();
-    this.coins = this.coins.filter(coin => (!(coin.x === zone.x && coin.y === zone.y)));
+    this.coins = this.coins.filter(
+      coin => !(coin.x === zone.x && coin.y === zone.y)
+    );
     zone.destroy();
   }
+
+  collideWithKlaudia(player, zone) {}
 
   createBono({ x = 0, y = 0 }) {
     return new Bono({
       scene: this,
       x: this.cameras.main.centerX,
-      y: this.cameras.main.centerY
+      y: this.cameras.main.centerY,
     });
   }
 }
