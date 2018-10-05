@@ -8,6 +8,22 @@ export default class extends Phaser.Scene {
     super({ key: "Game" });
 
     this.bono = null;
+    this.text = null;
+    this.spacebar = null;
+
+    this.conversation = {
+      RandomPerson: [
+        "Hi little dogie",
+        "woof",
+        "where is Claudia?",
+        "woof...",
+        "go find her, Bono! I count on you <3",
+        "WOOF"
+      ]
+    };
+    this.conversationStarted = false;
+    this.conversationIndex = 0;
+    this.activeTalker = "RandomPerson";
   }
 
   create() {
@@ -22,6 +38,9 @@ export default class extends Phaser.Scene {
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.SKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+    this.spacebar = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE
+    );
 
     this.physics.world.bounds.width = map.widthInPixels;
     this.physics.world.bounds.height = map.heightInPixels;
@@ -52,7 +71,11 @@ export default class extends Phaser.Scene {
       fill: "#000"
     });
     this.scoreText.setScrollFactor(0);
-    this.ball = this.physics.add.image(this.cameras.main.centerX + 50, this.cameras.main.centerY + 50, 'ball');
+    this.ball = this.physics.add.image(
+      this.cameras.main.centerX + 50,
+      this.cameras.main.centerY + 50,
+      "ball"
+    );
 
     this.physics.add.overlap(
       this.bono,
@@ -60,12 +83,83 @@ export default class extends Phaser.Scene {
       this.interactWithBall,
       false,
       this
-    )
+    );
+  }
+
+  _setText(text) {
+    if (this.text) this.text.destroy();
+
+    const padding = 10;
+
+    this.text = this.make.text({
+      x: this.cameras.main.midPoint.x - this.game.canvas.width / 2,
+      y: this.cameras.main.midPoint.y + this.game.canvas.height / 3 / 2,
+      text,
+      padding,
+      style: {
+        wordWrap: { width: this.game.canvas.width - 2 * padding },
+        fontSize: 9
+      }
+    });
   }
 
   update() {
+    if (this.msgBoxContainer && this.msgBoxContainer.visible) {
+      this.msgBoxContainer.clear();
+      this.msgBoxContainer.fillRectShape(this.msgBox);
+      this.msgBox.setPosition(
+        this.cameras.main.midPoint.x - this.game.canvas.width / 2,
+        this.cameras.main.midPoint.y + this.game.canvas.height / 3 / 2
+      );
+      this.text.setPosition(
+        this.cameras.main.midPoint.x - this.game.canvas.width / 2,
+        this.cameras.main.midPoint.y + this.game.canvas.height / 3 / 2
+      );
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
+      if (!this.conversationStarted) {
+        this.startConversation(this.conversation[this.activeTalker]);
+      }
+    }
+
     this.bono.update();
     this.scoreText.text = "Score " + this.bono.score;
+  }
+
+  addMsgBox(text) {
+    this.msgBox = new Phaser.Geom.Rectangle(
+      this.cameras.main.midPoint.x - this.game.canvas.width / 2,
+      this.cameras.main.midPoint.y + this.game.canvas.height / 3,
+      this.game.canvas.width,
+      this.game.canvas.height / 3
+    );
+    this.msgBoxContainer = this.add.graphics({
+      fillStyle: { color: 0x000000 }
+    });
+    this.msgBoxContainer.fillRectShape(this.msgBox);
+    this._setText(text);
+  }
+
+  startConversation(dialog) {
+    if (this.msgBoxContainer && this.msgBoxContainer.visible) {
+      this.msgBox = null;
+      this.msgBoxContainer.destroy();
+      this.text.destroy();
+      if (dialog[this.conversationIndex]) {
+        this.addMsgBox(dialog[this.conversationIndex]);
+        this.conversationIndex += 1;
+      } else {
+        this.conversationIndex = 0;
+      }
+    } else {
+      if (dialog[this.conversationIndex]) {
+        this.addMsgBox(dialog[this.conversationIndex]);
+        this.conversationIndex += 1;
+      } else {
+        this.conversationIndex = 0;
+      }
+    }
   }
 
   interactWithBitcoin(player, zone) {
