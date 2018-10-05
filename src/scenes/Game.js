@@ -28,10 +28,13 @@ export default class extends Phaser.Scene {
 
   create() {
     var map = this.make.tilemap({ key: "map" });
-    var tiles = map.addTilesetImage("spritesheet", "tiles");
-    var grass = map.createStaticLayer("Grass", tiles, 0, 0);
+    var tiles1 = map.addTilesetImage("tileset_furnitures");
+    var tiles2 = map.addTilesetImage("tileset_background");
+    map.createStaticLayer("Items", tiles1, 0, 0);
+    map.createStaticLayer("Furniture", tiles1, 0, 0);
+    map.createStaticLayer("Background", tiles2, 0, 0);
 
-    var obstacles = map.createStaticLayer("Obstacles", tiles, 0, 0);
+    var obstacles = map.createStaticLayer("walls", tiles2, 0, 0);
     obstacles.setCollisionByExclusion([-1]);
 
     this.bono = this.createBono({});
@@ -52,7 +55,7 @@ export default class extends Phaser.Scene {
     this.physics.add.collider(this.bono, obstacles);
 
     this.coins = [];
-    for (var i = 0; i < 30; i++) {
+    for (var i = 0; i < 50; i++) {
       var x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
       var y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
 
