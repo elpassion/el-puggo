@@ -12,12 +12,17 @@ class Player extends Phaser.GameObjects.Sprite {
     this.direction = "down";
     this.controls = new BonoKeyboard(this, this.scene);
     this.create();
+    this.score = 0;
   }
 
   create() {}
 
   update() {
     this.controls.update();
+  }
+
+  incrementBitcoins() {
+    this.score++;
   }
 }
 

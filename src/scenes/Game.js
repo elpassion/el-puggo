@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import makeAnimations from "../utils/animations";
 import Bono from "../sprites/Bono";
+import Bitcoin from "../objects/Bitcoin";
 
 export default class extends Phaser.Scene {
   constructor() {
@@ -31,7 +32,7 @@ export default class extends Phaser.Scene {
     this.physics.add.collider(this.bono, obstacles);
 
     this.spawns = this.physics.add.group({
-      classType: Phaser.GameObjects.Zone
+      classType: Bitcoin
     });
     for (var i = 0; i < 30; i++) {
       var x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
@@ -46,7 +47,6 @@ export default class extends Phaser.Scene {
       false,
       this
     );
-    this.score = 0;
     this.scoreText = this.add.text(16, 16, "score: 0", {
       fontSize: "32px",
       fill: "#000"
@@ -56,12 +56,12 @@ export default class extends Phaser.Scene {
 
   update() {
     this.bono.update();
+    this.scoreText.text = "Score " + this.bono.score;
   }
 
   interactWithBitcoin(player, zone) {
-    this.scoreText.text = "Score " + ++this.score;
+    zone.onInteract(player);
     zone.destroy();
-    this.cameras.main.shake(300);
   }
 
   createBono({ x = 0, y = 0 }) {
