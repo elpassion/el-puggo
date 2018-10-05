@@ -2,7 +2,7 @@ class BonoKeyboard {
   constructor(player, scene) {
     this.player = player;
     this.scene = scene;
-
+    this.direction = "down";
     this.cursors = scene.input.keyboard.createCursorKeys();
     // creates object with keys codes as follows:
     // 16: true | shift
@@ -41,17 +41,39 @@ class BonoKeyboard {
       this.player.ball && this.player.ball.anims.play("ball_move_down", true);
       this.player.body.setVelocityY(80);
     } else if (SKey.isDown) {
-      this.direction === "up" && this.player.anims.play("sit_up", true) && this.player.ball && this.player.ball.anims.play("ball_sit_up", true);
-      this.direction === "down" && this.player.anims.play("sit_down", true) && this.player.ball && this.player.ball.anims.play("ball_sit_down", true);
-      this.direction === "right" && this.player.anims.play("sit_right", true) && this.player.ball && this.player.ball.anims.play("ball_sit_right", true);
-      this.direction === "left" && this.player.anims.play("sit_left", true) && this.player.ball && this.player.ball.anims.play("ball_sit_left", true);
-    } else if (Phaser.Input.Keyboard.JustDown(DKey)) {
-      this.player.ball && this.player.removeBall();
+      this.direction === "up" &&
+        this.player.anims.play("sit_up", true) &&
+        this.player.ball &&
+        this.player.ball.anims.play("ball_sit_up", true);
+      this.direction === "down" &&
+        this.player.anims.play("sit_down", true) &&
+        this.player.ball &&
+        this.player.ball.anims.play("ball_sit_down", true);
+      this.direction === "right" &&
+        this.player.anims.play("sit_right", true) &&
+        this.player.ball &&
+        this.player.ball.anims.play("ball_sit_right", true);
+      this.direction === "left" &&
+        this.player.anims.play("sit_left", true) &&
+        this.player.ball &&
+        this.player.ball.anims.play("ball_sit_left", true);
     } else {
-      if (this.direction === "up") this.player.anims.play("stay_up", true) && this.player.ball && this.player.ball.anims.play("ball_stay_up", true);
-      if (this.direction === "down") this.player.anims.play("stay_down", true) && this.player.ball && this.player.ball.anims.play("ball_stay_down", true);
-      if (this.direction === "right") this.player.anims.play("stay_right", true) && this.player.ball && this.player.ball.anims.play("ball_stay_right", true);
-      if (this.direction === "left") this.player.anims.play("stay_left", true) && this.player.ball && this.player.ball.anims.play("ball_stay_left", true);
+      if (this.direction === "up")
+        this.player.anims.play("stay_up", true) &&
+          this.player.ball &&
+          this.player.ball.anims.play("ball_stay_up", true);
+      if (this.direction === "down")
+        this.player.anims.play("stay_down", true) &&
+          this.player.ball &&
+          this.player.ball.anims.play("ball_stay_down", true);
+      if (this.direction === "right")
+        this.player.anims.play("stay_right", true) &&
+          this.player.ball &&
+          this.player.ball.anims.play("ball_stay_right", true);
+      if (this.direction === "left")
+        this.player.anims.play("stay_left", true) &&
+          this.player.ball &&
+          this.player.ball.anims.play("ball_stay_left", true);
     }
   }
 }
