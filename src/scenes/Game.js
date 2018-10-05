@@ -28,11 +28,11 @@ export default class extends Phaser.Scene {
 
   create() {
     var map = this.make.tilemap({ key: "map" });
-    var tiles1 = map.addTilesetImage("tileset_furnitures");
     var tiles2 = map.addTilesetImage("tileset_background");
-    map.createStaticLayer("Items", tiles1, 0, 0);
-    map.createStaticLayer("Furniture", tiles1, 0, 0);
+    var tiles1 = map.addTilesetImage("tileset_furnitures");
     map.createStaticLayer("Background", tiles2, 0, 0);
+    map.createStaticLayer("Furniture", tiles1, 0, 0);
+    map.createStaticLayer("Items", tiles1, 0, 0);
 
     var obstacles = map.createStaticLayer("walls", tiles2, 0, 0);
     obstacles.setCollisionByExclusion([-1]);
@@ -78,8 +78,8 @@ export default class extends Phaser.Scene {
     this.scoreText.setScrollFactor(0);
 
     this.ball = this.physics.add.image(
-      this.cameras.main.centerX + 50,
-      this.cameras.main.centerY + 50,
+      this.cameras.main.centerX + 180,
+      this.cameras.main.centerY + 180,
       "ball"
     );
     this.physics.add.overlap(
@@ -90,7 +90,7 @@ export default class extends Phaser.Scene {
       this
     );
 
-    this.klaudia = new Person({ scene: this, x: 55, y: 32, key: "klaudia" });
+    this.klaudia = new Person({ scene: this, x: 300, y: 700, key: "klaudia" });
     this.klaudia.body.immovable = true;
     this.physics.add.collider(
       this.bono,
@@ -217,8 +217,8 @@ export default class extends Phaser.Scene {
   createBono({ x = 0, y = 0 }) {
     return new Bono({
       scene: this,
-      x: this.cameras.main.centerX,
-      y: this.cameras.main.centerY,
+      x: this.cameras.main.centerX +100,
+      y: this.cameras.main.centerY +80,
     });
   }
 }

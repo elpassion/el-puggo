@@ -8,7 +8,7 @@
    "height":30,
    "id":60,
    "name":"Background",
-   "opacity":0.3,
+   "opacity":1,
    "type":"tilelayer",
    "visible":true,
    "width":30,
