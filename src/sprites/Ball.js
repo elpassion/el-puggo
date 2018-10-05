@@ -14,9 +14,8 @@ class Ball extends Phaser.GameObjects.Sprite {
 
   create() {}
   update() {
-    this.setPosition(this.parent.x, this.parent.y)
+    this.setPosition(this.parent.x, this.parent.y);
   }
-
 }
 
 export default Ball;

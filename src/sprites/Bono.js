@@ -1,5 +1,5 @@
 import BonoKeyboard from "../utils/keyboard";
-import Ball from "../sprites/ball";
+import Ball from "../sprites/Ball";
 
 class Bono extends Phaser.GameObjects.Sprite {
   constructor(config) {
@@ -28,12 +28,12 @@ class Bono extends Phaser.GameObjects.Sprite {
   }
 
   getBall() {
-    console.log('Have a baaallll!!!');
+    console.log("Have a baaallll!!!");
     this.ball = new Ball({
       scene: this.scene,
       x: this.x,
       y: this.y,
-      parent: this
+      parent: this,
     });
   }
 }
