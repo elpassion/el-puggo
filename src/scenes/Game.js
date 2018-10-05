@@ -72,14 +72,14 @@ export default class extends Phaser.Scene {
     }
 
     this.scoreText = this.add.text(16, 16, "score: 0", {
-      fontSize: "32px",
+      fontSize: "16px",
       fill: "#000",
     });
     this.scoreText.setScrollFactor(0);
 
     this.ball = this.physics.add.image(
-      this.cameras.main.centerX + 180,
-      this.cameras.main.centerY + 180,
+      this.cameras.main.centerX + 680,
+      this.cameras.main.centerY + 700,
       "ball"
     );
     this.physics.add.overlap(
