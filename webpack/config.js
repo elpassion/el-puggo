@@ -104,7 +104,7 @@ module.exports = {
       },
       // SOUND
       {
-        test: /\.(mp3|oog|wmv|json)$/,
+        test: /\.(mp3|oog|wmv)$/,
         loader: 'file-loader',
         include: dirAssets,
         exclude: dirNode,
