@@ -50,6 +50,7 @@ export default class extends Phaser.Scene {
     this.physics.world.bounds.height = map.heightInPixels;
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    this.cameras.main.zoom = 2;
     this.cameras.main.startFollow(this.bono);
     this.cameras.main.roundPixels = true;
     this.physics.add.collider(this.bono, obstacles);

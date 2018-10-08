@@ -6,10 +6,12 @@ const tileSize = 32;
 const config = {
   type: Phaser.AUTO,
   parent: "el-puggo",
-  width: 9 * tileSize,
-  height: 7 * tileSize,
+  width: 9 * tileSize * 2,
+  height: 7 * tileSize * 2,
   pixelArt: true,
   antialias: false,
+  title: 'EL Puggo',
+  url: 'https://el-puggo.netlify.com',
   physics: {
     default: "arcade",
     arcade: {
