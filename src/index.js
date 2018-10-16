@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { Boot, Game } from "./scenes";
+import '../assets/styles/index.scss';
 
 const tileSize = 32;
 
