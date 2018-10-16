@@ -14,8 +14,9 @@ export default class extends Phaser.Scene {
 
   preload() {
     // fix for not working zoom key in main config
-    this.game.canvas.style.width = `${this.game.config.width * this.game.config.zoom}px`;
-    this.game.canvas.style.height = `${this.game.config.height * this.game.config.zoom}px`;
+    const { canvas: { style: canvasStyle }, config: { width, height, zoom } } = this.game;
+    canvasStyle.width = `${width * zoom}px`;
+    canvasStyle.height = `${height * zoom}px`;
 
     this.load.spritesheet('bono', BonoSprite, {
       frameWidth: 32,
