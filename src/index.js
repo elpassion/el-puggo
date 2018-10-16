@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { Boot, Game } from "./scenes";
+import '../assets/styles/index.scss';
 
 const tileSize = 32;
 
@@ -10,6 +11,7 @@ const config = {
   height: 7 * tileSize,
   pixelArt: true,
   antialias: false,
+  zoom: 3,
   title: 'EL Puggo',
   url: 'https://el-puggo.netlify.com',
   physics: {
