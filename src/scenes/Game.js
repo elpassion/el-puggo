@@ -37,6 +37,12 @@ export default class extends Phaser.Scene {
     var obstacles = map.createStaticLayer("walls", tiles2, 0, 0);
     obstacles.setCollisionByExclusion([-1]);
 
+    this.collectSound = this.sound.add('collectSound');
+    this.woofSound = this.sound.add('woofSound');
+    this.breathingSound = this.sound.add('breathingSound', { loop: true });
+    this.woofSound.play();
+    this.breathingSound.play();
+
     this.bono = this.createBono({});
     makeAnimations(this);
 
@@ -205,6 +211,7 @@ export default class extends Phaser.Scene {
   }
 
   interactWithCoin(player, zone) {
+    this.collectSound.play();
     player.incrementBitcoins();
     this.coins = this.coins.filter(
       coin => !(coin.x === zone.x && coin.y === zone.y)
