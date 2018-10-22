@@ -27,14 +27,14 @@ export default class extends Phaser.Scene {
   }
 
   create() {
-    var map = this.make.tilemap({ key: "map" });
-    var tiles2 = map.addTilesetImage("tileset_background");
-    var tiles1 = map.addTilesetImage("tileset_furnitures");
-    map.createStaticLayer("Background", tiles2, 0, 0);
-    map.createStaticLayer("Furniture", tiles1, 0, 0);
-    map.createStaticLayer("Items", tiles1, 0, 0);
+    this.map = this.make.tilemap({ key: "map" });
+    var tiles2 = this.map.addTilesetImage("tileset_background");
+    var tiles1 = this.map.addTilesetImage("tileset_furnitures");
+    this.map.createStaticLayer("Background", tiles2, 0, 0);
+    this.map.createStaticLayer("Furniture", tiles1, 0, 0);
+    this.map.createStaticLayer("Items", tiles1, 0, 0);
 
-    var obstacles = map.createStaticLayer("walls", tiles2, 0, 0);
+    var obstacles = this.map.createStaticLayer("walls", tiles2, 0, 0);
     obstacles.setCollisionByExclusion([-1]);
 
     this.collectSound = this.sound.add('collectSound');
@@ -52,49 +52,22 @@ export default class extends Phaser.Scene {
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
 
-    this.physics.world.bounds.width = map.widthInPixels;
-    this.physics.world.bounds.height = map.heightInPixels;
+    this.physics.world.bounds.width = this.map.widthInPixels;
+    this.physics.world.bounds.height = this.map.heightInPixels;
 
-    this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     this.cameras.main.startFollow(this.bono);
     this.cameras.main.roundPixels = true;
     this.physics.add.collider(this.bono, obstacles);
 
-    this.coins = [];
-    for (var i = 0; i < 50; i++) {
-      var x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
-      var y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
-
-      const coin = new Coin({ scene: this, x, y });
-      this.coins.push(coin);
-
-      this.physics.add.overlap(
-        this.bono,
-        coin,
-        this.interactWithCoin,
-        false,
-        this
-      );
-    }
+    this.spawnCoins();
+    this.spawnBall();
 
     this.scoreText = this.add.text(16, 16, "score: 0", {
       fontSize: "16px",
       fill: "#000",
     });
     this.scoreText.setScrollFactor(0);
-
-    this.ball = this.physics.add.image(
-      this.cameras.main.centerX + 680,
-      this.cameras.main.centerY + 700,
-      "ball"
-    );
-    this.physics.add.overlap(
-      this.bono,
-      this.ball,
-      this.interactWithBall,
-      false,
-      this
-    );
 
     this.klaudia = new Person({ scene: this, x: 300, y: 700, key: "klaudia" });
     this.klaudia.body.immovable = true;
@@ -226,6 +199,45 @@ export default class extends Phaser.Scene {
       scene: this,
       x: this.cameras.main.centerX +100,
       y: this.cameras.main.centerY +80,
+    });
+  }
+
+  spawnCoins() {
+    this.coins = [];
+    this.map.getObjectLayer('coins').objects.map((coin) => {
+      const coinObject = new Coin({
+        scene: this,
+        x: coin.x,
+        y: coin.y,
+      });
+
+      this.coins.push(coinObject);
+    });
+
+    this.physics.add.overlap(
+      this.bono,
+      this.coins,
+      this.interactWithCoin,
+      false,
+      this
+    );
+  }
+
+  spawnBall() {
+    this.map.getObjectLayer('ball').objects.map((ball) => {
+      const ballObject = this.physics.add.image(
+        ball.x,
+        ball.y,
+        "ball"
+      );
+
+      this.physics.add.overlap(
+        this.bono,
+        ballObject,
+        this.interactWithBall,
+        false,
+        this
+      );
     });
   }
 }
