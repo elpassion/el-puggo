@@ -6,6 +6,10 @@ import BallImage from '../../assets/sprites/ball.png';
 import BallSprite from '../../assets/sprites/ball_sprite.png';
 import CoinSprite from '../../assets/sprites/coin_sprite.png';
 import Klaudia from '../../assets/sprites/klaudia.png';
+import collect from '../../assets/sounds/collect.mp3';
+import pugWoof from '../../assets/sounds/pugWoof.mp3';
+import pugBreathing from '../../assets/sounds/pugBreathing.mp3';
+
 
 export default class extends Phaser.Scene {
   constructor() {
@@ -45,6 +49,10 @@ export default class extends Phaser.Scene {
     });
 
     this.load.image('klaudia', Klaudia);
+
+    this.load.audio('collectSound', collect);
+    this.load.audio('woofSound', pugWoof);
+    this.load.audio('breathingSound', pugBreathing);
   }
 
   create() {
