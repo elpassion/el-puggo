@@ -77,7 +77,7 @@ export default class extends Phaser.Scene {
     });
     this.scoreText.setScrollFactor(0);
 
-    this.klaudia = new Person({ scene: this, x: 300, y: 700, key: "klaudia" });
+    this.klaudia = new Person({ scene: this, x: 304, y: 736, key: "klaudia" });
     this.klaudia.body.immovable = true;
     this.physics.add.collider(
       this.bono,
@@ -126,7 +126,7 @@ export default class extends Phaser.Scene {
       const activeTalker =
         this.persons.filter(
           p =>
-            Math.abs(p.x - this.bono.x) < 10 &&
+            Math.abs(p.x - this.bono.x) < 20 &&
             Math.abs(p.y - this.bono.y) < p.height
         )[0] || null;
       if (
