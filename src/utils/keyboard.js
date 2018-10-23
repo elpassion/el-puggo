@@ -18,65 +18,113 @@ class BonoKeyboard {
   }
 
   update() {
-    const { cursors, SKey, DKey } = this;
-    this.player.body.setVelocity(0);
-    if (cursors.left.isDown) {
-      this.direction = "left";
-      this.player.anims.play("move_left", true);
-      this.player.ball && this.player.ball.anims.play("ball_move_left", true);
-      this.player.body.setVelocityX(-80);
-    } else if (cursors.right.isDown) {
-      this.direction = "right";
-      this.player.anims.play("move_right", true);
-      this.player.ball && this.player.ball.anims.play("ball_move_right", true);
-      this.player.body.setVelocityX(80);
-    } else if (cursors.up.isDown) {
-      this.direction = "up";
-      this.player.anims.play("move_up", true);
-      this.player.ball && this.player.ball.anims.play("ball_move_up", true);
-      this.player.body.setVelocityY(-80);
-    } else if (cursors.down.isDown) {
-      this.direction = "down";
-      this.player.anims.play("move_down", true);
-      this.player.ball && this.player.ball.anims.play("ball_move_down", true);
-      this.player.body.setVelocityY(80);
-    } else if (SKey.isDown) {
-      this.direction === "up" &&
-        this.player.anims.play("sit_up", true) &&
-        this.player.ball &&
-        this.player.ball.anims.play("ball_sit_up", true);
-      this.direction === "down" &&
-        this.player.anims.play("sit_down", true) &&
-        this.player.ball &&
-        this.player.ball.anims.play("ball_sit_down", true);
-      this.direction === "right" &&
-        this.player.anims.play("sit_right", true) &&
-        this.player.ball &&
-        this.player.ball.anims.play("ball_sit_right", true);
-      this.direction === "left" &&
-        this.player.anims.play("sit_left", true) &&
-        this.player.ball &&
-        this.player.ball.anims.play("ball_sit_left", true);
-    } else if (Phaser.Input.Keyboard.JustDown(DKey)) {
-      this.player.ball && this.player.removeBall();
-    } else {
-      if (this.direction === "up")
-        this.player.anims.play("stay_up", true) &&
-          this.player.ball &&
-          this.player.ball.anims.play("ball_stay_up", true);
-      if (this.direction === "down")
-        this.player.anims.play("stay_down", true) &&
-          this.player.ball &&
-          this.player.ball.anims.play("ball_stay_down", true);
-      if (this.direction === "right")
-        this.player.anims.play("stay_right", true) &&
-          this.player.ball &&
-          this.player.ball.anims.play("ball_stay_right", true);
-      if (this.direction === "left")
-        this.player.anims.play("stay_left", true) &&
-          this.player.ball &&
-          this.player.ball.anims.play("ball_stay_left", true);
+    const { cursors, SKey, player, scene } = this;
+    const inputDelay = 100;
+
+    if (player.isMoving) return;
+
+    const lastCoords = JSON.parse(JSON.stringify(player));
+    const newCoords = JSON.parse(JSON.stringify(lastCoords));
+
+    // ['up', 'right', 'down', 'left'].map(direction => {
+    //   if (scene.input.keyboard.checkDown(cursors[direction], inputDelay)) {
+    //     this.move(direction, newCoords);
+    //   }
+    // })
+
+    if (scene.input.keyboard.checkDown(cursors.left, inputDelay)) {
+      this.move('left', newCoords);
+    } else if (scene.input.keyboard.checkDown(cursors.right, inputDelay)) {
+      this.move('right', newCoords);
+    } else if (scene.input.keyboard.checkDown(cursors.up, inputDelay)) {
+      this.move('up', newCoords);
+    } else if (scene.input.keyboard.checkDown(cursors.down, inputDelay)) {
+      this.move('down', newCoords);
     }
+
+    // handle sitting animation
+    if (SKey.isDown) {
+      this.sit('sit');
+    } else if (Phaser.Input.Keyboard.JustUp(SKey)) {
+      this.sit('stay');
+    }
+
+    // animate movement with a tween
+    if (lastCoords.x !== newCoords.x || lastCoords.y !== newCoords.y) {
+      scene.tweens.add({
+        targets: player,
+        x: newCoords.x,
+        y: newCoords.y,
+        duration: 300,
+        ease: 'Linear',
+        onStart: () => {
+          player.lastMove = new Date();
+          player.isMoving = true;
+        },
+        onComplete: () => {
+          switch (player.direction) {
+            case 'up':
+              player.animation = 'stay_up';
+              if (player.ball) player.ball.animation = 'ball_stay_up';
+              break;
+            case 'right':
+              player.animation = 'stay_right';
+              if (player.ball) player.ball.animation = 'ball_stay_right';
+              break;
+            case 'left':
+              player.animation = 'stay_left';
+              if (player.ball) player.ball.animation = 'ball_stay_left';
+              break;
+            case 'down':
+              player.animation = 'stay_down';
+              if (player.ball) player.ball.animation = 'ball_stay_down';
+              break;
+          }
+
+          player.isMoving = false;
+          player.x = newCoords.x;
+          player.y = newCoords.y;
+        }
+      });
+    }
+  }
+
+  sit(type) {
+    switch (this.player.direction) {
+      case 'right':
+        this.player.animation = `${type}_right`;
+        if (this.player.ball) this.player.ball.animation = `ball_${type}_right`;
+        break;
+      case 'left':
+        this.player.animation = `${type}_left`;
+        if (this.player.ball) this.player.ball.animation = `ball_${type}_left`;
+        break;
+      case 'up':
+        this.player.animation = `${type}_up`;
+        if (this.player.ball) this.player.ball.animation = `ball_${type}_up`;
+        break;
+      case 'down':
+        this.player.animation = `${type}_down`;
+        if (this.player.ball) this.player.ball.animation = `ball_${type}_down`;
+        break;
+    }
+  }
+
+  move(direction, newCoords) {
+    if (this.player.direction !== direction) {
+      this.player.animation = `stay_${direction}`;
+      if (this.player.ball) this.player.ball.animation = `ball_stay_${direction}`
+    } else {
+      switch (direction) {
+        case 'up': newCoords.y -= 32; break;
+        case 'down': newCoords.y += 32; break;
+        case 'left': newCoords.x -= 32; break;
+        case 'right': newCoords.x += 32; break;
+      }
+      this.player.animation = `move_${direction}`;
+      if (this.player.ball) this.player.ball.animation = `ball_move_${direction}`
+    }
+    this.player.direction = direction;
   }
 }
 

@@ -6,20 +6,20 @@ class Bono extends Phaser.GameObjects.Sprite {
     super(config.scene, config.x, config.y, (config.key = "bono"));
 
     this.scene = config.scene;
-    // this.setOrigin(0.0);
     config.scene.physics.world.enable(this);
     this.scene.add.existing(this);
     this.body.setCollideWorldBounds(true);
+
     this.direction = "down";
     this.controls = new BonoKeyboard(this, this.scene);
-    this.create();
     this.score = 0;
+    this.animation = 'stay_down';
+    this.ball = null;
   }
-
-  create() {}
 
   update() {
     this.controls.update();
+    this.playAnimation();
     this.ball && this.ball.update();
   }
 
@@ -33,12 +33,17 @@ class Bono extends Phaser.GameObjects.Sprite {
       x: this.x,
       y: this.y,
       parent: this,
+      direction: this.direction,
     });
   }
 
   removeBall() {
     this.ball.destroy();
     this.ball = null;
+  }
+
+  playAnimation() {
+    this.anims.play(this.animation, true);
   }
 }
 
