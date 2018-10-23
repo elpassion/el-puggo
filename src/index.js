@@ -12,6 +12,7 @@ const config = {
   pixelArt: true,
   antialias: false,
   zoom: 3,
+  backgroundColor: '#0d212e',
   title: 'EL Puggo',
   url: 'https://el-puggo.netlify.com',
   physics: {

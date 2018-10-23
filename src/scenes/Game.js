@@ -30,12 +30,15 @@ export default class extends Phaser.Scene {
     this.map = this.make.tilemap({ key: "map" });
     var tiles2 = this.map.addTilesetImage("tileset_background");
     var tiles1 = this.map.addTilesetImage("tileset_furnitures");
-    this.map.createStaticLayer("Background", tiles2, 0, 0);
-    this.map.createStaticLayer("Items", tiles1, 0, 0);
+    const background = this.map.createStaticLayer("Background", tiles2, 0, 0);
+    const walls = this.map.createStaticLayer("Walls", tiles2, 0, 0);
     const furnitures = this.map.createStaticLayer("Furniture", tiles1, 0, 0);
+    const items = this.map.createStaticLayer("Items", tiles1, 0, 0);
 
     // var furnitures = this.map.createStaticLayer("walls", tiles1, 0, 0);
     // const obstacles = this.map.createStaticLayer("walls", tiles2, 0, 0);
+    // background.setCollisionByExclusion([-1]);
+    walls.setCollisionByExclusion([-1]);
     furnitures.setCollisionByExclusion([-1]);
 
     this.collectSound = this.sound.add('collectSound');
@@ -45,7 +48,6 @@ export default class extends Phaser.Scene {
     this.breathingSound.play();
 
     this.map.getObjectLayer('bono').objects.map((bono) => {
-      console.log(bono.x, bono.y);
       this.bono = this.createBono({
         x: Math.round(bono.x / 32) * 32,
         y: Math.round(bono.y / 32) * 32,
@@ -64,7 +66,7 @@ export default class extends Phaser.Scene {
     this.cameras.main.startFollow(this.bono);
     this.cameras.main.roundPixels = true;
 
-    this.physics.add.collider(this.bono, furnitures, () => console.log('boom'), false, this);
+    this.physics.add.collider(this.bono, [background, walls, furnitures]);
 
     this.spawnCoins();
     this.spawnBall();
