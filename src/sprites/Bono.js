@@ -12,15 +12,25 @@ class Bono extends Phaser.GameObjects.Sprite {
 
     this.direction = "down";
     this.controls = new BonoKeyboard(this, this.scene);
+    this.setOrigin(0, 0);
     this.score = 0;
     this.animation = 'stay_down';
     this.ball = null;
+    this.newCoords = {
+      x: null,
+      y: null,
+    };
   }
 
   update() {
     this.controls.update();
     this.playAnimation();
     this.ball && this.ball.update();
+    if ((Math.round(this.x) === Math.round(this.newCoords.x))
+      && (Math.round(this.y) === Math.round(this.newCoords.y))) {
+      this.body.reset(Math.round(this.x / 32) * 32, Math.round(this.y / 32) * 32)
+      this.animation = `stay_${this.direction}`;
+    }
   }
 
   incrementBitcoins() {

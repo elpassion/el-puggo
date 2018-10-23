@@ -9,7 +9,7 @@ class Ball extends Phaser.GameObjects.Sprite {
     this.body.setCollideWorldBounds(true);
 
     this.direction = config.direction;
-    console.log(config);
+    this.setOrigin(0, 0);
     this.score = 0;
     this.animation = `ball_stay_${config.direction}`;
   }

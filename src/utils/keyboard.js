@@ -15,31 +15,22 @@ class BonoKeyboard {
     this.DKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 
     this.lastSend = Date.now();
+    this.inputDelay = 250;
   }
 
   update() {
-    const { cursors, SKey, player, scene } = this;
-    const inputDelay = 100;
+    const { cursors, SKey, DKey, player, scene } = this;
 
-    if (player.isMoving) return;
+    this.newCoords = { x: player.x, y: player.y };
 
-    const lastCoords = JSON.parse(JSON.stringify(player));
-    const newCoords = JSON.parse(JSON.stringify(lastCoords));
-
-    // ['up', 'right', 'down', 'left'].map(direction => {
-    //   if (scene.input.keyboard.checkDown(cursors[direction], inputDelay)) {
-    //     this.move(direction, newCoords);
-    //   }
-    // })
-
-    if (scene.input.keyboard.checkDown(cursors.left, inputDelay)) {
-      this.move('left', newCoords);
-    } else if (scene.input.keyboard.checkDown(cursors.right, inputDelay)) {
-      this.move('right', newCoords);
-    } else if (scene.input.keyboard.checkDown(cursors.up, inputDelay)) {
-      this.move('up', newCoords);
-    } else if (scene.input.keyboard.checkDown(cursors.down, inputDelay)) {
-      this.move('down', newCoords);
+    if (scene.input.keyboard.checkDown(cursors.left, this.inputDelay)) {
+      this.move('left');
+    } else if (scene.input.keyboard.checkDown(cursors.right, this.inputDelay)) {
+      this.move('right');
+    } else if (scene.input.keyboard.checkDown(cursors.up, this.inputDelay)) {
+      this.move('up');
+    } else if (scene.input.keyboard.checkDown(cursors.down, this.inputDelay)) {
+      this.move('down');
     }
 
     // handle sitting animation
@@ -49,43 +40,8 @@ class BonoKeyboard {
       this.sit('stay');
     }
 
-    // animate movement with a tween
-    if (lastCoords.x !== newCoords.x || lastCoords.y !== newCoords.y) {
-      scene.tweens.add({
-        targets: player,
-        x: newCoords.x,
-        y: newCoords.y,
-        duration: 300,
-        ease: 'Linear',
-        onStart: () => {
-          player.lastMove = new Date();
-          player.isMoving = true;
-        },
-        onComplete: () => {
-          switch (player.direction) {
-            case 'up':
-              player.animation = 'stay_up';
-              if (player.ball) player.ball.animation = 'ball_stay_up';
-              break;
-            case 'right':
-              player.animation = 'stay_right';
-              if (player.ball) player.ball.animation = 'ball_stay_right';
-              break;
-            case 'left':
-              player.animation = 'stay_left';
-              if (player.ball) player.ball.animation = 'ball_stay_left';
-              break;
-            case 'down':
-              player.animation = 'stay_down';
-              if (player.ball) player.ball.animation = 'ball_stay_down';
-              break;
-          }
-
-          player.isMoving = false;
-          player.x = newCoords.x;
-          player.y = newCoords.y;
-        }
-      });
+    if (Phaser.Input.Keyboard.JustDown(DKey)) {
+      this.player.ball && this.player.removeBall();
     }
   }
 
@@ -110,17 +66,22 @@ class BonoKeyboard {
     }
   }
 
-  move(direction, newCoords) {
+  move(direction) {
+
     if (this.player.direction !== direction) {
       this.player.animation = `stay_${direction}`;
       if (this.player.ball) this.player.ball.animation = `ball_stay_${direction}`
     } else {
       switch (direction) {
-        case 'up': newCoords.y -= 32; break;
-        case 'down': newCoords.y += 32; break;
-        case 'left': newCoords.x -= 32; break;
-        case 'right': newCoords.x += 32; break;
+        case 'up': this.newCoords.y -= 32; break;
+        case 'down': this.newCoords.y += 32; break;
+        case 'left': this.newCoords.x -= 32; break;
+        case 'right': this.newCoords.x += 32; break;
       }
+
+      this.scene.physics.moveTo(this.player, this.newCoords.x, this.newCoords.y, null, this.inputDelay);
+      this.player.newCoords = this.newCoords;
+
       this.player.animation = `move_${direction}`;
       if (this.player.ball) this.player.ball.animation = `ball_move_${direction}`
     }

@@ -31,11 +31,12 @@ export default class extends Phaser.Scene {
     var tiles2 = this.map.addTilesetImage("tileset_background");
     var tiles1 = this.map.addTilesetImage("tileset_furnitures");
     this.map.createStaticLayer("Background", tiles2, 0, 0);
-    this.map.createStaticLayer("Furniture", tiles1, 0, 0);
     this.map.createStaticLayer("Items", tiles1, 0, 0);
+    const furnitures = this.map.createStaticLayer("Furniture", tiles1, 0, 0);
 
-    var obstacles = this.map.createStaticLayer("walls", tiles2, 0, 0);
-    obstacles.setCollisionByExclusion([-1]);
+    // var furnitures = this.map.createStaticLayer("walls", tiles1, 0, 0);
+    // const obstacles = this.map.createStaticLayer("walls", tiles2, 0, 0);
+    furnitures.setCollisionByExclusion([-1]);
 
     this.collectSound = this.sound.add('collectSound');
     this.woofSound = this.sound.add('woofSound');
@@ -43,11 +44,15 @@ export default class extends Phaser.Scene {
     this.woofSound.play();
     this.breathingSound.play();
 
-    this.bono = this.createBono({});
+    this.map.getObjectLayer('bono').objects.map((bono) => {
+      console.log(bono.x, bono.y);
+      this.bono = this.createBono({
+        x: Math.round(bono.x / 32) * 32,
+        y: Math.round(bono.y / 32) * 32,
+      });
+    });
     makeAnimations(this);
 
-    this.cursors = this.input.keyboard.createCursorKeys();
-    this.SKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
     this.spacebar = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
@@ -58,7 +63,8 @@ export default class extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     this.cameras.main.startFollow(this.bono);
     this.cameras.main.roundPixels = true;
-    this.physics.add.collider(this.bono, obstacles);
+
+    this.physics.add.collider(this.bono, furnitures, () => console.log('boom'), false, this);
 
     this.spawnCoins();
     this.spawnBall();
@@ -126,7 +132,6 @@ export default class extends Phaser.Scene {
         activeTalker &&
         this.conversation[activeTalker.name]
       ) {
-        console.log("asd");
         this.startConversation(this.conversation[activeTalker.name]);
       }
     }
@@ -197,8 +202,8 @@ export default class extends Phaser.Scene {
   createBono({ x = 0, y = 0 }) {
     return new Bono({
       scene: this,
-      x: this.cameras.main.centerX +100,
-      y: this.cameras.main.centerY +80,
+      x,
+      y,
     });
   }
 
