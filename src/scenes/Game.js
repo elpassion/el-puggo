@@ -230,11 +230,11 @@ export default class extends Phaser.Scene {
     );
   }
 
-  spawnBall() {
+  spawnBall(x, y) {
     this.map.getObjectLayer('ball').objects.map((ball) => {
       const ballObject = this.physics.add.image(
-        ball.x,
-        ball.y,
+        x || ball.x,
+        y || ball.y,
         "ball"
       );
 

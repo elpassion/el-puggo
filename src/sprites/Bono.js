@@ -50,6 +50,8 @@ class Bono extends Phaser.GameObjects.Sprite {
   removeBall() {
     this.ball.destroy();
     this.ball = null;
+    const BonoPosition = { x: this.x, y: this.y };
+    setTimeout(() => this.scene.spawnBall(BonoPosition.x + 16, BonoPosition.y + 16), 200);
   }
 
   playAnimation() {
