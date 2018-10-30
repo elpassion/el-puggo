@@ -5,6 +5,7 @@ import BonoMap from '../../assets/map/Bono_map.json';
 import BallImage from '../../assets/sprites/ball.png';
 import BallSprite from '../../assets/sprites/ball_sprite.png';
 import CoinSprite from '../../assets/sprites/coin_sprite.png';
+import JagerImage from '../../assets/sprites/jager.png';
 import Klaudia from '../../assets/sprites/klaudia.png';
 import collect from '../../assets/sounds/collect.mp3';
 import pugWoof from '../../assets/sounds/pugWoof.mp3';
@@ -36,6 +37,9 @@ export default class extends Phaser.Scene {
 
     // ball
     this.load.image('ball', BallImage);
+
+    // jager
+    this.load.image('jager', JagerImage);
 
     // ball sprites
     this.load.spritesheet('ball_sprite', BallSprite, {
