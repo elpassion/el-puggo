@@ -73,10 +73,10 @@ class BonoKeyboard {
       if (this.player.ball) this.player.ball.animation = `ball_stay_${direction}`
     } else {
       switch (direction) {
-        case 'up': this.newCoords.y -= 32; break;
-        case 'down': this.newCoords.y += 32; break;
-        case 'left': this.newCoords.x -= 32; break;
-        case 'right': this.newCoords.x += 32; break;
+        case 'up': this.newCoords.y -= (this.player.drunk * 32); break;
+        case 'down': this.newCoords.y += (this.player.drunk * 32); break;
+        case 'left': this.newCoords.x -= (this.player.drunk * 32); break;
+        case 'right': this.newCoords.x += (this.player.drunk * 32); break;
       }
 
       this.scene.physics.moveTo(this.player, this.newCoords.x, this.newCoords.y, null, this.inputDelay);
