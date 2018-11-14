@@ -15,7 +15,7 @@ class Bono extends Phaser.GameObjects.Sprite {
     this.setOrigin(0, 0);
     this.score = 0;
     this.animation = 'stay_down';
-    this.drunk = 1; // if drunk it will reverse every move -> value: -1
+    this.sober = true;
     this.ball = null;
     this.newCoords = {
       x: null,

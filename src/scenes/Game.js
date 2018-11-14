@@ -261,7 +261,7 @@ export default class extends Phaser.Scene {
         this.bono,
         jagerObject,
         (player, jager) => {
-          player.drunk *= (-1);
+          player.sober = !player.sober;
           jager.destroy();
         },
       );
