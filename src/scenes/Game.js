@@ -70,6 +70,7 @@ export default class extends Phaser.Scene {
 
     this.spawnCoins();
     this.spawnBall();
+    this.spawnJagers();
 
     this.scoreText = this.add.text(16, 16, "score: 0", {
       fontSize: "16px",
@@ -244,6 +245,25 @@ export default class extends Phaser.Scene {
         this.interactWithBall,
         false,
         this
+      );
+    });
+  }
+
+  spawnJagers(x, y) {
+    this.map.getObjectLayer('jagers').objects.map((jager) => {
+      const jagerObject = this.physics.add.image(
+        jager.x + 16,
+        jager.y - 16,
+        "jager"
+      );
+
+      this.physics.add.overlap(
+        this.bono,
+        jagerObject,
+        (player, jager) => {
+          player.sober = !player.sober;
+          jager.destroy();
+        },
       );
     });
   }

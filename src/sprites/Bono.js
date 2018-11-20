@@ -15,6 +15,8 @@ class Bono extends Phaser.GameObjects.Sprite {
     this.setOrigin(0, 0);
     this.score = 0;
     this.animation = 'stay_down';
+    this.sober = true;
+    this.moveDistance = 32;
     this.ball = null;
     this.newCoords = {
       x: null,
